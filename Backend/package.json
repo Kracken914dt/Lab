@@ -1,0 +1,27 @@
+{
+  "name": "jwt-lab-backend",
+  "version": "1.0.0",
+  "description": "Laboratorio de Broken Authentication / JWT Lab (Vulnerable y Seguro)",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "attack:forge": "node scripts/forge_no_verify.js",
+    "attack:resign": "node scripts/resign_with_weak_secret.js",
+    "secure:test": "node scripts/secure_flow_test.js"
+  },
+  "keywords": [
+    "express",
+    "jwt",
+    "security",
+    "lab"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.7.7",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "jsonwebtoken": "^9.0.2"
+  }
+}

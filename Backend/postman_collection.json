@@ -1,0 +1,82 @@
+{
+  "info": {
+    "name": "JWT Lab Backend",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Vulnerable Login",
+      "request": {
+        "method": "POST",
+        "header": [ {"key": "Content-Type", "value": "application/json"} ],
+        "url": {"raw": "http://localhost:3000/login", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["login"]},
+        "body": {"mode": "raw", "raw": "{\n  \"username\": \"juan\",\n  \"password\": \"juan123\"\n}"}
+      }
+    },
+    {
+      "name": "Vulnerable Profile",
+      "request": {
+        "method": "GET",
+        "header": [ {"key": "Authorization", "value": "Bearer {{token}}"} ],
+        "url": {"raw": "http://localhost:3000/profile", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["profile"]}
+      }
+    },
+    {
+      "name": "Vulnerable Admin",
+      "request": {
+        "method": "GET",
+        "header": [ {"key": "Authorization", "value": "Bearer {{token}}"} ],
+        "url": {"raw": "http://localhost:3000/admin", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["admin"]}
+      }
+    },
+    {
+      "name": "Secure Login (juan)",
+      "request": {
+        "method": "POST",
+        "header": [ {"key": "Content-Type", "value": "application/json"} ],
+        "url": {"raw": "http://localhost:3000/secure/login", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["secure","login"]},
+        "body": {"mode": "raw", "raw": "{\n  \"username\": \"juan\",\n  \"password\": \"juan123\"\n}"}
+      }
+    },
+    {
+      "name": "Secure Profile",
+      "request": {
+        "method": "GET",
+        "header": [ {"key": "Authorization", "value": "Bearer {{accessToken}}"} ],
+        "url": {"raw": "http://localhost:3000/secure/profile", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["secure","profile"]}
+      }
+    },
+    {
+      "name": "Secure Admin",
+      "request": {
+        "method": "GET",
+        "header": [ {"key": "Authorization", "value": "Bearer {{accessToken}}"} ],
+        "url": {"raw": "http://localhost:3000/secure/admin", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["secure","admin"]}
+      }
+    },
+    {
+      "name": "Secure Refresh",
+      "request": {
+        "method": "POST",
+        "header": [ {"key": "Content-Type", "value": "application/json"} ],
+        "url": {"raw": "http://localhost:3000/secure/refresh", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["secure","refresh"]},
+        "body": {"mode": "raw", "raw": "{\n  \"refreshToken\": \"{{refreshToken}}\"\n}"}
+      }
+    },
+    {
+      "name": "Secure Logout",
+      "request": {
+        "method": "POST",
+        "header": [ {"key": "Content-Type", "value": "application/json"} ],
+        "url": {"raw": "http://localhost:3000/secure/logout", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["secure","logout"]},
+        "body": {"mode": "raw", "raw": "{\n  \"refreshToken\": \"{{refreshToken}}\",\n  \"accessJti\": \"{{accessJti}}\"\n}"}
+      }
+    }
+  ],
+  "variable": [
+    {"key": "token", "value": ""},
+    {"key": "accessToken", "value": ""},
+    {"key": "refreshToken", "value": ""},
+    {"key": "accessJti", "value": ""}
+  ]
+}
