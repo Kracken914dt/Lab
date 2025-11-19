@@ -6,16 +6,15 @@ const { findUser, getUserById } = require('./users');
 const router = express.Router();
 router.use(cookieParser());
 
-// Secret robusto desde entorno (>=32 bytes)
+
 const SECURE_SECRET = process.env.SECURE_JWT_SECRET || '';
 if (!SECURE_SECRET || SECURE_SECRET.length < 32) {
-  // No arrojamos excepción para no romper el lab, pero avisamos por consola
   console.warn('[SECURE] SECURE_JWT_SECRET no establecido o demasiado corto. Defínelo en .env');
 }
 
-// Almacenamiento en memoria (solo para demo)
-const accessBlacklist = new Set(); // guarda jti de access tokens invalidados
-const refreshStore = new Map(); // refreshToken -> { userId, exp }
+
+const accessBlacklist = new Set(); 
+const refreshStore = new Map(); 
 
 function signAccessToken(user) {
   const now = Math.floor(Date.now() / 1000);
@@ -62,7 +61,6 @@ function verifyAccess(req, res, next) {
 }
 
 function requireAdmin(req, res, next) {
-  // Usar SIEMPRE el rol desde el backend (req.user)
   if (req.user && req.user.role === 'admin') return next();
   return res.status(403).json({ error: 'Requiere rol admin' });
 }
@@ -78,7 +76,7 @@ router.post('/secure/login', (req, res) => {
   return res.json({ accessToken, refreshToken });
 });
 
-// /secure/refresh - rotación de tokens (invalida el refresh anterior)
+
 router.post('/secure/refresh', (req, res) => {
   const { refreshToken } = req.body || {};
   if (!refreshToken) return res.status(400).json({ error: 'Falta refreshToken' });
@@ -89,7 +87,7 @@ router.post('/secure/refresh', (req, res) => {
     if (!entry || String(entry.userId) !== decoded.sub) {
       return res.status(401).json({ error: 'Refresh token inválido o revocado' });
     }
-    // Rotación: eliminar viejo y emitir nuevo
+
     refreshStore.delete(refreshToken);
     const user = getUserById(Number(decoded.sub));
     if (!user) return res.status(401).json({ error: 'Usuario no encontrado' });
@@ -101,7 +99,7 @@ router.post('/secure/refresh', (req, res) => {
   }
 });
 
-// /secure/logout - invalida refresh y (opcional) invalida access enviando jti
+
 router.post('/secure/logout', (req, res) => {
   const { refreshToken, accessJti } = req.body || {};
   if (refreshToken && refreshStore.has(refreshToken)) {
@@ -111,7 +109,7 @@ router.post('/secure/logout', (req, res) => {
   return res.json({ ok: true, message: 'Sesión cerrada' });
 });
 
-// /secure/profile - verificado y usando rol del backend
+
 router.get('/secure/profile', verifyAccess, (req, res) => {
   return res.json({
     user: { id: req.user.id, username: req.user.username, role: req.user.role },
@@ -119,7 +117,7 @@ router.get('/secure/profile', verifyAccess, (req, res) => {
   });
 });
 
-// /secure/admin - protegido correctamente
+
 router.get('/secure/admin', verifyAccess, requireAdmin, (req, res) => {
   return res.json({ message: 'Acceso admin CONCEDIDO (seguro)' });
 });

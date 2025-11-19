@@ -4,10 +4,9 @@ const { findUser } = require('./users');
 
 const router = express.Router();
 
-// Secreto débil a propósito
 const WEAK_SECRET = '123';
 
-// Decodifica un JWT sin verificar la firma (INSEGURO)
+
 function decodeJwtWithoutVerify(token) {
   try {
     const parts = token.split('.');
@@ -24,10 +23,6 @@ function decodeJwtWithoutVerify(token) {
   }
 }
 
-// 1) /login (vulnerable)
-// - Sin expiración
-// - Firmado con secreto débil "123"
-// - Acepta role opcional desde el cliente (demostrando confianza indebida)
 router.post('/login', (req, res) => {
   const { username, password, role } = req.body || {};
   const user = findUser(username, password);
@@ -41,9 +36,7 @@ router.post('/login', (req, res) => {
   return res.json({ token, note: 'Token sin expiración y con secreto débil' });
 });
 
-// 2) /admin (super vulnerable)
-// - NO verifica firma
-// - Confía solo en el payload -> modificable por cualquiera
+
 router.get('/admin', (req, res) => {
   const auth = req.headers['authorization'] || '';
   const token = auth.startsWith('Bearer ') ? auth.slice(7) : '';
@@ -58,8 +51,7 @@ router.get('/admin', (req, res) => {
   return res.status(403).json({ error: 'Acceso denegado (role != admin, pero fácilmente falsificable)' });
 });
 
-// 3) /profile (también vulnerable)
-// - NO verifica firma, devuelve lo que el cliente envíe en el JWT
+
 router.get('/profile', (req, res) => {
   const auth = req.headers['authorization'] || '';
   const token = auth.startsWith('Bearer ') ? auth.slice(7) : '';

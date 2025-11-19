@@ -1,5 +1,4 @@
-// Usuarios hardcodeados (sin base de datos)
-// NOTA: contraseñas simples a propósito para el laboratorio
+
 const users = [
   { id: 1, username: 'juan', password: 'juan123', role: 'user' },
   { id: 2, username: 'admin', password: 'admin123', role: 'admin' }
